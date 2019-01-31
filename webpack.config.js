@@ -3,9 +3,9 @@ const dest = path.resolve(__dirname, './dist');
 
 module.exports = {
   mode: 'production',
-  entry: './src/index.js',
+  entry: path.resolve(__dirname, './src/index.js'),
   output: {
-    path: dest,
+    path: path.resolve(__dirname, './dist'),
     filename: 'index.js',
     library: 'store',
     libraryTarget: 'umd'
@@ -20,7 +20,7 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['jsx', '.js']
+    extensions: ['.jsx', '.js']
   },
   externals: {
     react: 'react',
