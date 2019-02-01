@@ -7,9 +7,9 @@ const ResourceContext = React.createContext('get');
 const { Provider, Consumer } = ResourceContext;
 
 export default ({ children, ...rest }) => {
-  const { name, transform, path, defaultValue, params = {}, headers = {} } = rest;
+  const { name, transform, path, defaultValue, params = {}, headers = {}, memoize = false } = rest;
   const { setData, setBusy, getData, getBusy, apiUrl } = useContext(Context);
-  const data = getData(name) || defaultValue;
+  const currentValue = getData(name) || defaultValue;
   const refreshName = `refresh.${name}`;
 
   useEffect(
@@ -29,6 +29,10 @@ export default ({ children, ...rest }) => {
   };
 
   const fetchItems = async () => {
+    if (memoize && currentValue !== defaultValue) {
+      return;
+    }
+
     setBusy(name);
 
     const paths = Array.isArray(path) ? path : [path];
@@ -53,7 +57,7 @@ export default ({ children, ...rest }) => {
   };
 
   return (
-    <Provider value={{ data, busy: getBusy(name) }}>
+    <Provider value={{ data: currentValue, busy: getBusy(name) }}>
       <Consumer>{children}</Consumer>
     </Provider>
   );
