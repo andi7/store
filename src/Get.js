@@ -8,7 +8,7 @@ const { Provider, Consumer } = ResourceContext;
 
 export default ({ children, ...rest }) => {
   const { name, transform, path, defaultValue, params = {}, headers = {}, memoize = false } = rest;
-  const { setData, setBusy, getData, getBusy, apiUrl } = useContext(Context);
+  const { setData, setBusy, getData, getBusy, apiUrl, headers: globalHeaders } = useContext(Context);
   const currentValue = getData(name) || defaultValue;
   const refreshName = `refresh.${name}`;
 
@@ -41,7 +41,7 @@ export default ({ children, ...rest }) => {
         method: 'get',
         url: `${apiUrl}/${pathName}`,
         params,
-        headers
+        headers: { ...globalHeaders, headers }
       })
     );
 

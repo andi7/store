@@ -6,8 +6,8 @@ import Context from './context';
 const ResourceContext = React.createContext('create');
 const { Provider, Consumer } = ResourceContext;
 
-export default ({ children, path, name, validate }) => {
-  const { apiUrl, setBusy, getBusy } = useContext(Context);
+export default ({ children, path, name, validate, headers = {} }) => {
+  const { apiUrl, setBusy, getBusy, headers: globalHeaders } = useContext(Context);
   const busyName = `save${name}`;
 
   const save = values => {
@@ -21,7 +21,8 @@ export default ({ children, path, name, validate }) => {
       axios({
         method: values.id ? 'patch' : 'post',
         url: `${apiUrl}/${path}`,
-        data: values
+        data: values,
+        headers: { ...globalHeaders, headers }
       })
         .then(response => resolve(response.data))
         .catch(err => reject(err))

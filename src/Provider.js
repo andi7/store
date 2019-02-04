@@ -63,11 +63,11 @@ export default class StateProvider extends Component {
   };
 
   render() {
-    const { children, apiUrl = '' } = this.props;
-    const { state, setData, setBusy, setShown, getData, getBusy, getShown, refreshResource } = this;
+    const { children, apiUrl = '', headers = {} } = this.props;
+    const { setData, setBusy, setShown, getData, getBusy, getShown, refreshResource } = this;
 
     return (
-      <Provider value={{ state, setData, setBusy, setShown, getData, getBusy, getShown, apiUrl, refreshResource }}>
+      <Provider value={{ setData, setBusy, setShown, getData, getBusy, getShown, apiUrl, refreshResource, headers }}>
         {children}
       </Provider>
     );
