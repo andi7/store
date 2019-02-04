@@ -6,22 +6,17 @@ import Context from './context';
 const ResourceContext = React.createContext('create');
 const { Provider, Consumer } = ResourceContext;
 
-export default ({ children, path, name, validate }) => {
+export default ({ children, path, name, id }) => {
   const { apiUrl, setBusy, getBusy } = useContext(Context);
-  const busyName = `save${name}`;
+  const busyName = `delete${name}`;
 
-  const save = values => {
+  const destroy = () => {
     return new Promise((resolve, reject) => {
-      if (!validate(values)) {
-        reject(new Error('Failed to pass validation'));
-      }
-
       setBusy(busyName);
 
       axios({
-        method: values.id ? 'patch' : 'post',
-        url: `${apiUrl}/${path}`,
-        data: values
+        method: 'delete',
+        url: `${apiUrl}/${path}/${id}`
       })
         .then(response => resolve(response.data))
         .catch(err => reject(err))
@@ -29,8 +24,12 @@ export default ({ children, path, name, validate }) => {
     });
   };
 
+  if (!id) {
+    children = () => null;
+  }
+
   return (
-    <Provider value={{ save, busy: getBusy(busyName) }}>
+    <Provider value={{ destroy, busy: getBusy(busyName) }}>
       <Consumer>{children}</Consumer>
     </Provider>
   );
