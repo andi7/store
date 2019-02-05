@@ -7,7 +7,7 @@ const ResourceContext = React.createContext('create');
 const { Provider, Consumer } = ResourceContext;
 
 export default ({ children, path, name, validate, headers = {} }) => {
-  const { apiUrl, setBusy, getBusy, headers: globalHeaders } = useContext(Context);
+  const { apiUrl, setBusy, getBusy, headers: globalHeaders, beforeSave } = useContext(Context);
   const busyName = `save${name}`;
 
   const save = ({ key, id, ...values }) => {
@@ -15,6 +15,10 @@ export default ({ children, path, name, validate, headers = {} }) => {
       if (!validate(values)) {
         reject(new Error('Failed to pass validation'));
         return;
+      }
+
+      if (beforeSave) {
+        values = beforeSave(values);
       }
 
       setBusy(busyName);

@@ -8,7 +8,15 @@ const { Provider, Consumer } = ResourceContext;
 
 export default ({ children, ...rest }) => {
   const { name, transform, path, defaultValue, params = {}, headers = {}, memoize = false } = rest;
-  const { setData, setBusy, getData, getBusy, apiUrl, headers: globalHeaders } = useContext(Context);
+  const {
+    setData,
+    setBusy,
+    getData,
+    getBusy,
+    apiUrl,
+    headers: globalHeaders,
+    afterGet
+  } = useContext(Context);
   const currentValue = getData(name) || defaultValue;
   const refreshName = `refresh.${name}`;
 
@@ -47,6 +55,10 @@ export default ({ children, ...rest }) => {
 
     let data = await Promise.all(requests);
     data = data.map(response => response.data);
+
+    if (afterGet) {
+      data = data.map(entry => afterGet(entry));
+    }
 
     if (transform) {
       data = transform(data.length > 1 ? data : data[0]);
