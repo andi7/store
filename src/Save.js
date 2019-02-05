@@ -14,6 +14,7 @@ export default ({ children, path, name, validate, headers = {} }) => {
     return new Promise((resolve, reject) => {
       if (!validate(values)) {
         reject(new Error('Failed to pass validation'));
+        return;
       }
 
       setBusy(busyName);
