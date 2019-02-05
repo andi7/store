@@ -10,7 +10,7 @@ export default ({ children, path, name, validate, headers = {} }) => {
   const { apiUrl, setBusy, getBusy, headers: globalHeaders } = useContext(Context);
   const busyName = `save${name}`;
 
-  const save = values => {
+  const save = ({ key, id, ...values }) => {
     return new Promise((resolve, reject) => {
       if (!validate(values)) {
         reject(new Error('Failed to pass validation'));
@@ -19,8 +19,8 @@ export default ({ children, path, name, validate, headers = {} }) => {
       setBusy(busyName);
 
       axios({
-        method: values.id ? 'patch' : 'post',
-        url: `${apiUrl}/${path}`,
+        method: id ? 'patch' : 'post',
+        url: `${apiUrl}/${path}${id ? `/${id}` : ''}`,
         data: values,
         headers: { ...globalHeaders, headers }
       })
