@@ -7,7 +7,7 @@ const ResourceContext = React.createContext('create');
 const { Provider, Consumer } = ResourceContext;
 
 export default ({ children, path, name, id, headers = {} }) => {
-  const { apiUrl, setBusy, getBusy, headers: globalHeaders } = useContext(Context);
+  const { apiUrl, setBusy, getBusy, globalHeaders } = useContext(Context);
   const busyName = `delete${name}`;
 
   const destroy = () => {
@@ -17,7 +17,7 @@ export default ({ children, path, name, id, headers = {} }) => {
       axios({
         method: 'delete',
         url: `${apiUrl}/${path}/${id}`,
-        headers: { ...globalHeaders, ...headers }
+        headers: { ...globalHeaders(), ...headers }
       })
         .then(response => resolve(response.data))
         .catch(err => reject(err))

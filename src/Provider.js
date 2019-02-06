@@ -39,7 +39,9 @@ export default class StateProvider extends Component {
   getData = paths => {
     const { data } = this.state;
 
-    if (!Array.isArray(paths)) {
+    if (!paths) {
+      return data;
+    } else if (!Array.isArray(paths)) {
       return getPath(data, paths);
     }
 
@@ -63,7 +65,7 @@ export default class StateProvider extends Component {
   };
 
   render() {
-    const { children, apiUrl = '', headers = {}, afterGet, beforeSave } = this.props;
+    const { children, apiUrl = '', headers, afterGet, beforeSave } = this.props;
     const { setData, setBusy, setShown, getData, getBusy, getShown, refreshResource } = this;
 
     return (
@@ -77,7 +79,7 @@ export default class StateProvider extends Component {
           getShown,
           apiUrl,
           refreshResource,
-          headers,
+          globalHeaders: () => headers(getData()) || {},
           afterGet,
           beforeSave
         }}

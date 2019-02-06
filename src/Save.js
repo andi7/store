@@ -7,7 +7,7 @@ const ResourceContext = React.createContext('create');
 const { Provider, Consumer } = ResourceContext;
 
 export default ({ children, path, name, validate, headers = {} }) => {
-  const { apiUrl, setBusy, getBusy, headers: globalHeaders, beforeSave } = useContext(Context);
+  const { apiUrl, setBusy, getBusy, globalHeaders, beforeSave } = useContext(Context);
   const busyName = `save${name}`;
 
   const save = ({ key, id, ...values }) => {
@@ -27,7 +27,7 @@ export default ({ children, path, name, validate, headers = {} }) => {
         method: id ? 'patch' : 'post',
         url: `${apiUrl}/${path}${id ? `/${id}` : ''}`,
         data: values,
-        headers: { ...globalHeaders, headers }
+        headers: { ...globalHeaders(), headers }
       })
         .then(response => resolve(response.data))
         .catch(err => reject(err))
