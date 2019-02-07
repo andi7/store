@@ -6,7 +6,7 @@ import Context from './context';
 const ResourceContext = React.createContext('create');
 const { Provider, Consumer } = ResourceContext;
 
-export default ({ children, path, name, id, headers = {} }) => {
+export default ({ children, path, name, params = {}, headers = {}, show }) => {
   const { apiUrl, setBusy, getBusy, globalHeaders } = useContext(Context);
   const busyName = `delete${name}`;
 
@@ -16,7 +16,7 @@ export default ({ children, path, name, id, headers = {} }) => {
 
       axios({
         method: 'delete',
-        url: `${apiUrl}/${path}/${id}`,
+        url: `${apiUrl}/${path.replace(/:(\w+)/, (_, group) => params[group])}`,
         headers: { ...globalHeaders(), ...headers }
       })
         .then(response => resolve(response.data))
@@ -25,7 +25,7 @@ export default ({ children, path, name, id, headers = {} }) => {
     });
   };
 
-  if (!id) {
+  if (!show) {
     children = () => null;
   }
 

@@ -41,7 +41,7 @@ export default ({ children, ...rest }) => {
     const requests = paths.map(pathName =>
       axios({
         method: 'get',
-        url: `${apiUrl}/${pathName}`,
+        url: `${apiUrl}/${pathName.replace(/:(\w+)/, (_, group) => params[group])}`,
         params,
         headers: { ...globalHeaders(), headers }
       })
