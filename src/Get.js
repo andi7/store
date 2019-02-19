@@ -6,13 +6,26 @@ import Context from './context';
 const ResourceContext = React.createContext('get');
 const { Provider, Consumer } = ResourceContext;
 
-export default ({ children, ...rest }) => {
-  const { name, transform, path, defaultValue, params = {}, headers = {}, memoize = false } = rest;
+export default ({ children, name, ...rest }) => {
+  const {
+    transform,
+    path,
+    defaultValue,
+    params = {},
+    headers = {},
+    replace = {},
+    memoize = false
+  } = rest;
   const { setData, setBusy, getData, getBusy, apiUrl, globalHeaders, afterGet } = useContext(
     Context
   );
+
+  const replaceParams = str => str.replace(/:(\w+)/, (_, group) => replace[group]);
+
+  name = replaceParams(name);
   const currentValue = getData(name) || defaultValue;
   const refreshName = `refresh.${name}`;
+  const paths = Array.isArray(path) ? path : [path];
 
   useEffect(
     () => {
@@ -23,7 +36,7 @@ export default ({ children, ...rest }) => {
         window.removeEventListener(refreshName, handleRefresh);
       };
     },
-    [name, path, ...Object.values(params), ...Object.values(headers)] //to be changed
+    [name, ...paths, ...Object.values(params), ...Object.values(headers)] //to be changed
   );
 
   const handleRefresh = () => {
@@ -37,11 +50,10 @@ export default ({ children, ...rest }) => {
 
     setBusy(name);
 
-    const paths = Array.isArray(path) ? path : [path];
     const requests = paths.map(pathName =>
       axios({
         method: 'get',
-        url: `${apiUrl}/${pathName.replace(/:(\w+)/, (_, group) => params[group])}`,
+        url: `${apiUrl}/${replaceParams(pathName)}`,
         params,
         headers: { ...globalHeaders(), headers }
       })
