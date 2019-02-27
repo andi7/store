@@ -9,7 +9,7 @@ export default ({ path, name, validate, headers = {}, transform, method = 'post'
 
   const save = ({ key, ...values }) => {
     return new Promise((resolve, reject) => {
-      if (!validate(values)) {
+      if (validate && !validate(values)) {
         reject(new Error('Failed to pass validation'));
         return;
       }
