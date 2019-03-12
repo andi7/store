@@ -75,7 +75,7 @@ export default ({
     }
 
     if (transform) {
-      data = transform(data.length > 1 ? data : data[0]);
+      data = transform(data.length > 1 ? data : data[0], params);
     }
 
     setData(name, data);
