@@ -65,7 +65,7 @@ export default class StateProvider extends Component {
   };
 
   render() {
-    const { children, apiUrl = '', headers, afterGet, beforeSave } = this.props;
+    const { children, apiUrl = '', headers, beforeGet, afterGet, beforeSave } = this.props;
     const { setData, setBusy, setShown, getData, getBusy, getShown, refreshResource } = this;
 
     return (
@@ -80,6 +80,7 @@ export default class StateProvider extends Component {
           apiUrl,
           refreshResource,
           globalHeaders: () => headers(getData()) || {},
+          beforeGet,
           afterGet,
           beforeSave
         }}
