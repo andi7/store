@@ -20,7 +20,7 @@ export default props => {
   name = replaceParams(name);
   const currentValue = getData(name) || defaultValue;
   const refreshName = `refresh.${name}`;
-  const { get, busy } = useFetch(props);
+  const { get, busy } = useFetch({ transform, path });
 
   useEffect(() => {
     fetchItems();
@@ -39,7 +39,7 @@ export default props => {
       return;
     }
 
-    const data = await get();
+    const data = await get({ params, headers, replace });
 
     setData(name, data);
     setResourceData(data);

@@ -3,15 +3,14 @@ import axios from 'axios';
 
 import Context from '../context';
 
-export default ({ name, transform, path, params = {}, headers = {}, replace = {} }) => {
-  const replaceParams = str => str.replace(/:(\w+)/, (_, group) => replace[group]);
+export default ({ transform, path }) => {
+  const replaceParams = (str, obj) => str.replace(/:(\w+)/, (_, group) => obj[group]);
 
   const { apiUrl, globalHeaders, beforeGet, afterGet, setBusy, getBusy } = useContext(Context);
   const paths = Array.isArray(path) ? path : [path];
-  name = replaceParams(name);
 
-  const fetchItems = () =>
-    new Promise((resolve, reject) => {
+  const fetchItems = ({ params = {}, headers = {}, replace = {} }) => {
+    return new Promise((resolve, reject) => {
       setBusy(name);
 
       const requests = paths.map((pathName, index) => {
@@ -23,7 +22,7 @@ export default ({ name, transform, path, params = {}, headers = {}, replace = {}
 
         return axios({
           method: 'get',
-          url: `${apiUrl}/${replaceParams(pathName)}`,
+          url: `${apiUrl}/${replaceParams(pathName, replace)}`,
           params: resourceParams,
           headers: { ...globalHeaders(), headers }
         });
@@ -46,6 +45,7 @@ export default ({ name, transform, path, params = {}, headers = {}, replace = {}
         })
         .catch(err => reject(err));
     });
+  };
 
   return { get: fetchItems, busy: getBusy(name) };
 };
