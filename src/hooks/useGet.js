@@ -3,18 +3,17 @@ import React, { useContext, useEffect, useState } from 'react';
 import Context from '../context';
 import useFetch from './useFetch';
 
-export default props => {
+export default ({
+  name,
+  path,
+  defaultValue,
+  params = {},
+  headers = {},
+  replace = {},
+  memoize = false
+}) => {
   const replaceParams = str => str.replace(/:(\w+)/, (_, group) => replace[group]);
 
-  let {
-    name,
-    path,
-    defaultValue,
-    params = {},
-    headers = {},
-    replace = {},
-    memoize = false
-  } = props;
   const { setData, getData } = useContext(Context);
   const [resourceData, setResourceData] = useState(defaultValue);
   name = replaceParams(name);
