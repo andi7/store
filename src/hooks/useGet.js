@@ -10,7 +10,8 @@ export default ({
   params = {},
   headers = {},
   replace = {},
-  memoize = false
+  memoize = false,
+  transform
 }) => {
   const replaceParams = str => str.replace(/:(\w+)/, (_, group) => replace[group]);
 
