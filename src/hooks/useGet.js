@@ -13,7 +13,7 @@ export default ({
   memoize = false,
   transform
 }) => {
-  const replaceParams = str => str.replace(/:(\w+)/, (_, group) => replace[group]);
+  const replaceParams = (str = '') => str.replace(/:(\w+)/, (_, group) => replace[group]);
 
   const { setData, getData } = useContext(Context);
   const [resourceData, setResourceData] = useState(defaultValue);
