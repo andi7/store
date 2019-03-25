@@ -1,36 +1,18 @@
-import React, { useContext } from 'react';
-import axios from 'axios';
+import React from 'react';
+import { useDelete } from './hooks';
 
-import Context from './context';
-
-const ResourceContext = React.createContext('create');
+const ResourceContext = React.createContext('destroy');
 const { Provider, Consumer } = ResourceContext;
 
-export default ({ children, path, name, params = {}, headers = {}, show }) => {
-  const { apiUrl, setBusy, getBusy, globalHeaders } = useContext(Context);
-  const busyName = `delete${name}`;
-
-  const destroy = () => {
-    return new Promise((resolve, reject) => {
-      setBusy(busyName);
-
-      axios({
-        method: 'delete',
-        url: `${apiUrl}/${path.replace(/:(\w+)/, (_, group) => params[group])}`,
-        headers: { ...globalHeaders(), ...headers }
-      })
-        .then(response => resolve(response.data))
-        .catch(err => reject(err))
-        .finally(() => setBusy(busyName, false));
-    });
-  };
+export default ({ children, show, ...rest }) => {
+  const { destroy, busy } = useDelete(rest);
 
   if (!show) {
     children = () => null;
   }
 
   return (
-    <Provider value={{ destroy, busy: getBusy(busyName) }}>
+    <Provider value={{ destroy, busy }}>
       <Consumer>{children}</Consumer>
     </Provider>
   );
