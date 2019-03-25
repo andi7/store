@@ -3,11 +3,11 @@ import axios from 'axios';
 
 import Context from '../context';
 
-export default ({ path, name, params = {}, headers = {} }) => {
+export default ({ path, name }) => {
   const { apiUrl, setBusy, getBusy, globalHeaders } = useContext(Context);
   const busyName = `delete${name}`;
 
-  const destroy = () => {
+  const destroy = ({ params = {}, headers = {} }) => {
     return new Promise((resolve, reject) => {
       setBusy(busyName);
 
