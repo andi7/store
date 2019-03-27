@@ -7,7 +7,7 @@ export default ({ path, name }) => {
   const { apiUrl, setBusy, getBusy, globalHeaders } = useContext(Context);
   const busyName = `delete${name}`;
 
-  const destroy = ({ params = {}, headers = {} }) => {
+  const destroy = ({ params = {}, headers = {} } = {}) => {
     return new Promise((resolve, reject) => {
       setBusy(busyName);
 
