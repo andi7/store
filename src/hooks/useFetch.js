@@ -6,13 +6,11 @@ import Context from '../context';
 export default ({ transform, path }) => {
   const replaceParams = (str, obj) => str.replace(/:(\w+)/, (_, group) => obj[group]);
 
-  const { apiUrl, globalHeaders, beforeGet, afterGet, setBusy, getBusy } = useContext(Context);
+  const { apiUrl, globalHeaders, beforeGet, afterGet } = useContext(Context);
   const paths = Array.isArray(path) ? path : [path];
 
   const fetchItems = ({ params = {}, headers = {}, replace = {} }) => {
     return new Promise((resolve, reject) => {
-      setBusy(name);
-
       const requests = paths.map((pathName, index) => {
         let resourceParams = Array.isArray(params) ? params[index] : params;
 
@@ -40,12 +38,11 @@ export default ({ transform, path }) => {
             data = transform(data.length > 1 ? data : data[0], params);
           }
 
-          setBusy(name, false);
           resolve(data);
         })
         .catch(err => reject(err));
     });
   };
 
-  return { get: fetchItems, busy: getBusy(name) };
+  return { get: fetchItems };
 };

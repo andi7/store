@@ -15,12 +15,12 @@ export default ({
 }) => {
   const replaceParams = (str = '') => str.replace(/:(\w+)/, (_, group) => replace[group]);
 
-  const { setData, getData } = useContext(Context);
+  const { setData, getData, setBusy, getBusy } = useContext(Context);
   const [resourceData, setResourceData] = useState(defaultValue);
   name = replaceParams(name);
   const currentValue = getData(name) || defaultValue;
   const refreshName = `refresh.${name}`;
-  const { get, busy } = useFetch({ transform, path });
+  const { get } = useFetch({ transform, path });
 
   useEffect(() => {
     fetchItems();
@@ -39,11 +39,13 @@ export default ({
       return;
     }
 
+    setBusy(name);
     const data = await get({ params, headers, replace });
+    setBusy(name, false);
 
     setData(name, data);
     setResourceData(data);
   };
 
-  return { data: resourceData, busy };
+  return { data: resourceData, busy: getBusy(name) };
 };
