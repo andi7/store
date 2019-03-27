@@ -1,5 +1,4 @@
 const path = require('path');
-const dest = path.resolve(__dirname, './dist');
 
 module.exports = {
   mode: 'production',
