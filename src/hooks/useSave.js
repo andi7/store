@@ -4,7 +4,7 @@ import axios from 'axios';
 import Context from '../context';
 
 export default ({ path, name, validate, headers = {}, transform, method = 'post' }) => {
-  const { apiUrl, setBusy, getBusy, globalHeaders, beforeSave } = useContext(Context);
+  const { apiUrl, setBusy, getBusy, globalHeaders, beforeSave, axiosConfig } = useContext(Context);
   const busyName = `save${name}`;
 
   const save = ({ key, ...values }) => {
@@ -30,7 +30,8 @@ export default ({ path, name, validate, headers = {}, transform, method = 'post'
         method,
         url: fullApiUrl,
         data: values,
-        headers: { ...globalHeaders(), headers }
+        headers: { ...globalHeaders(), headers },
+        ...axiosConfig
       })
         .then(response => resolve(response.data))
         .catch(err => reject(err))

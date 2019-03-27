@@ -4,7 +4,7 @@ import axios from 'axios';
 import Context from '../context';
 
 export default ({ path, name, headers = {} }) => {
-  const { apiUrl, setBusy, getBusy, globalHeaders } = useContext(Context);
+  const { apiUrl, setBusy, getBusy, globalHeaders, axiosConfig } = useContext(Context);
   const busyName = `delete${name}`;
 
   const destroy = (params = {}) => {
@@ -14,7 +14,8 @@ export default ({ path, name, headers = {} }) => {
       axios({
         method: 'delete',
         url: `${apiUrl}/${path.replace(/:(\w+)/, (_, group) => params[group])}`,
-        headers: { ...globalHeaders(), ...headers }
+        headers: { ...globalHeaders(), ...headers },
+        ...axiosConfig
       })
         .then(response => resolve(response.data))
         .catch(err => reject(err))
