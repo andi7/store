@@ -3,7 +3,15 @@ import axios from 'axios';
 
 import Context from '../context';
 
-export default ({ path, name, validate, headers = {}, transform, method = 'post' }) => {
+export default ({
+  path,
+  name,
+  validate,
+  headers = {},
+  transform,
+  method = 'post',
+  transformUrl
+}) => {
   const { apiUrl, setBusy, getBusy, globalHeaders, beforeSave } = useContext(Context);
   const busyName = `save${name}`;
 
@@ -12,6 +20,10 @@ export default ({ path, name, validate, headers = {}, transform, method = 'post'
       if (validate && !validate(values)) {
         reject(new Error('Failed to pass validation'));
         return;
+      }
+
+      if (transformUrl) {
+        path = transformUrl(path);
       }
 
       const fullApiUrl = `${apiUrl}/${path.replace(/:(\w+)/, (_, group) => values[group])}`;
