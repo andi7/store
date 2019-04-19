@@ -22,15 +22,15 @@ export default ({
         return;
       }
 
-      if (transformUrl) {
-        path = transformUrl(path);
-      }
-
-      const fullApiUrl = `${apiUrl}/${path.replace(/:(\w+)/, (_, group) => values[group])}`;
-
       if (transform) {
         values = transform(values);
       }
+
+      if (transformUrl) {
+        path = transformUrl(path, values);
+      }
+
+      const fullApiUrl = `${apiUrl}/${path.replace(/:(\w+)/, (_, group) => values[group])}`;
 
       if (beforeSave) {
         values = beforeSave(values);
