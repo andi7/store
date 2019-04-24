@@ -12,7 +12,7 @@ export default ({
   method = 'post',
   transformUrl
 }) => {
-  const { apiUrl, setBusy, getBusy, globalHeaders, beforeSave } = useContext(Context);
+  const { apiUrl, setBusy, getBusy, globalHeaders, beforeSave, afterSave } = useContext(Context);
   const busyName = `save${name}`;
 
   const save = ({ key, ...values }) => {
@@ -44,7 +44,7 @@ export default ({
         data: values,
         headers: { ...globalHeaders(), headers }
       })
-        .then(response => resolve(response.data))
+        .then(({ data }) => resolve(afterSave ? afterSave(data) : data))
         .catch(err => reject(err))
         .finally(() => setBusy(busyName, false));
     });
