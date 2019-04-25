@@ -72,7 +72,8 @@ export default class StateProvider extends Component {
       beforeGet,
       afterGet,
       beforeSave,
-      afterSave
+      afterSave,
+      axiosConfig = {}
     } = this.props;
     const { setData, setBusy, setShown, getData, getBusy, getShown, refreshResource } = this;
 
@@ -91,7 +92,8 @@ export default class StateProvider extends Component {
           beforeGet,
           afterGet,
           beforeSave,
-          afterSave
+          afterSave,
+          axiosConfig
         }}
       >
         {children}

@@ -12,7 +12,15 @@ export default ({
   method = 'post',
   transformUrl
 }) => {
-  const { apiUrl, setBusy, getBusy, globalHeaders, beforeSave, afterSave } = useContext(Context);
+  const {
+    apiUrl,
+    setBusy,
+    getBusy,
+    globalHeaders,
+    beforeSave,
+    afterSave,
+    axiosConfig
+  } = useContext(Context);
   const busyName = `save${name}`;
 
   const save = ({ key, ...values }) => {
@@ -42,7 +50,8 @@ export default ({
         method,
         url: fullApiUrl,
         data: values,
-        headers: { ...globalHeaders(), headers }
+        headers: { ...globalHeaders(), headers },
+        ...axiosConfig
       })
         .then(({ data }) => resolve(afterSave ? afterSave(data) : data))
         .catch(err => reject(err))
